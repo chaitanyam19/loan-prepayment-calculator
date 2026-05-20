@@ -10,13 +10,36 @@ Build the image:
 docker build -t loan-prepayment-calculator .
 ```
 
-Run the container interactively:
+Run the FastAPI container on port 8080:
 
 ```bash
-docker run -it --rm loan-prepayment-calculator
+docker run -it --rm -p 8080:8080 loan-prepayment-calculator
 ```
 
-## Publish to a registry
+Open the API docs in your browser:
+
+```bash
+http://localhost:8080/docs
+```
+
+Fetch a calculation with curl:
+
+```bash
+curl "http://localhost:8080/calculate?principal=100000&annual_rate=10&tenure_years=5&prepayment_month=12&prepayment_amount=20000&method=reduce+tenure"
+```
+
+Publish the image to a registry:
+
+```bash
+docker tag loan-prepayment-calculator your-registry/loan-prepayment-calculator:latest
+docker push your-registry/loan-prepayment-calculator:latest
+```
+
+Then run it from any host with Docker:
+
+```bash
+docker run -it --rm -p 8080:8080 your-registry/loan-prepayment-calculator:latest
+```
 
 Tag the image for your registry:
 

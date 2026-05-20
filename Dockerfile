@@ -2,8 +2,11 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-COPY loan_prepayment_final.py .
+COPY requirements.txt .
+RUN python3 -m pip install --no-cache-dir -r requirements.txt
 
-RUN python3 -m compileall loan_prepayment_final.py
+COPY loan_prepayment_fastapi.py .
 
-ENTRYPOINT ["python3", "loan_prepayment_final.py"]
+EXPOSE 8080
+
+ENTRYPOINT ["uvicorn", "loan_prepayment_fastapi:app", "--host", "0.0.0.0", "--port", "8080"]
