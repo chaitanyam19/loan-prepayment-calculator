@@ -67,7 +67,17 @@ def remaining_tenure(principal: float, annual_rate: float, emi: float) -> int:
 
 
 def format_currency(value: float) -> str:
-    return f"${value:,.2f}"
+    return f"Rs - {value:,.2f}"
+
+
+def format_months(months: int) -> str:
+    years = months // 12
+    remaining_months = months % 12
+    if years and remaining_months:
+        return f"{years} years {remaining_months} months"
+    if years:
+        return f"{years} years"
+    return f"{months} months"
 
 
 def ask_float(prompt: str) -> float:
@@ -106,7 +116,7 @@ def main() -> None:
     total_interest = total_payment - principal
 
     print(f"\nMonthly EMI: {format_currency(emi)}")
-    print(f"Total interest over {months} months: {format_currency(total_interest)}")
+    print(f"Total interest over {months} months ({format_months(months)}): {format_currency(total_interest)}")
 
     prepayment_month = ask_int("Prepayment month number (1-based, 0 to skip): ")
     if prepayment_month < 1 or prepayment_month > months:
@@ -139,15 +149,15 @@ def main() -> None:
         print("\nPrepayment summary:")
         print(f"Outstanding balance before prepayment: {format_currency(outstanding_before)}")
         print(f"Outstanding balance after prepayment: {format_currency(outstanding_after)}")
-        print(f"Original remaining months: {remaining_payments}")
-        print(f"New remaining months with same EMI: {new_months}")
+        print(f"Original remaining months: {remaining_payments} ({format_months(remaining_payments)})")
+        print(f"New remaining months with same EMI: {new_months} ({format_months(new_months)})")
         print(f"Tenure reduction: {remaining_payments - new_months} months")
     else:
         new_emi = calculate_emi(outstanding_after, annual_rate, remaining_payments)
         print("\nPrepayment summary:")
         print(f"Outstanding balance before prepayment: {format_currency(outstanding_before)}")
         print(f"Outstanding balance after prepayment: {format_currency(outstanding_after)}")
-        print(f"Remaining months unchanged: {remaining_payments}")
+        print(f"Remaining months unchanged: {remaining_payments} ({format_months(remaining_payments)})")
         print(f"New EMI with same remaining tenure: {format_currency(new_emi)}")
 
     total_paid_before_prepayment = emi * prepayment_month
